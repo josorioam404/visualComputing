@@ -1,4 +1,5 @@
 # Taller 1 - Mundo 3D
+
 ## Fecha
 `2025-10-01` 
 
@@ -58,13 +59,13 @@ Lista los principales conceptos aplicados:
 │   └── escena.mp4
 └── README.MD
 ```
-```
-``` 
+
 ---
 
 ## Implementación
 
 ### Etapas realizadas
+
 1. Investigación de funcionalidades de three.js en YouTube, principalmente para animaciones básicas y uso de modelos 3D.
 2. Uso de meshy.ai para generación de modelos 3D con sus respectivas texturas.
 3. Implementación de algoritmos y funcionalidades requeridas para el desarrollo del taller.
@@ -74,65 +75,68 @@ Lista los principales conceptos aplicados:
 
 Cargue de modelos 3D de formato GLB en three.js:
 
-```python
-    // MODEL 1: THERIZINOSAURUS - ORGANIC 
-    loader.load("assets/therizinosaurus.glb", function(glb){
-      models.dino = glb.scene;
-      models.dino.scale.set(1, 1, 1);
-      models.dino.position.set(0, -2.75, 0);
-      
-      models.dino.traverse(function(node) {
-        if (node.isMesh) {
-          node.castShadow = true;
-          node.receiveShadow = true;
-          if (node.material) {
-            node.material.roughness = 0.7;
-            node.material.metalness = 0.1;
-          }
-        }
-      });
-      
-      scene.add(models.dino);
-      console.log("Modelo 1: (roughness=0.7, metalness=0.1)");
-    }, function(xhr){
-      console.log("Modelo 1: " + (xhr.loaded/xhr.total * 100).toFixed(2) + "% loaded");
-    }, function(error){
-      console.error("Error cargando modelo 1");
-});```
+```javascript
+// MODEL 1: THERIZINOSAURUS - ORGANIC 
+loader.load("assets/therizinosaurus.glb", function(glb){
+  models.dino = glb.scene;
+  models.dino.scale.set(1, 1, 1);
+  models.dino.position.set(0, -2.75, 0);
+  
+  models.dino.traverse(function(node) {
+    if (node.isMesh) {
+      node.castShadow = true;
+      node.receiveShadow = true;
+      if (node.material) {
+        node.material.roughness = 0.7;
+        node.material.metalness = 0.1;
+      }
+    }
+  });
+  
+  scene.add(models.dino);
+  console.log("Modelo 1: (roughness=0.7, metalness=0.1)");
+}, function(xhr){
+  console.log("Modelo 1: " + (xhr.loaded/xhr.total * 100).toFixed(2) + "% loaded");
+}, function(error){
+  console.error("Error cargando modelo 1");
+});
+```
 
 ---
 
 ## Explicaciones
+
 #### Mundo generado
-  El mundo generado representa algunas monturas de World Of Warcraft, un terizinosaurio y una acropolis. Además de los ejemplos de la generación de shaders de Bandas y Damero, y un icosahedro giratorio sobre uno de los puntos principales de la acropolis. 
+
+El mundo generado representa algunas monturas de World Of Warcraft, un terizinosaurio y una acropolis. Además de los ejemplos de la generación de shaders de Bandas y Damero, y un icosahedro giratorio sobre uno de los puntos principales de la acropolis.
 
 #### Modelos GLB Usados
-  Se usaron modelos GLB generados en meshy.ai por medio de imágenes buscadas en internet para las búsquedas "vial de arenas png", "mecajarly png", "terizionosaurio png".
-No se realizaron modificaciones en los formatos de generación, todas las modificaciones se manejaron el el código en javascript, ajustando un tamaño grande para la acropolis, mediano para el dragón y pequeño para la moto y el dinosaurio.
 
-#### ILuminación
-  Se generaron presets de día y atardecer, para estos se carga una textura en el fondo de la escena. Estos presets se pueden alternar presionando la tecla "L".
-  Para las luces key, fill y rim .. . la luz rim que se implementó se mueve sobre los ejes XY, generando ligeros cambios en las sombras de los objetos.
+Se usaron modelos GLB generados en meshy.ai por medio de imágenes buscadas en internet para las búsquedas "vial de arenas png", "mecajarly png", "terizionosaurio png". No se realizaron modificaciones en los formatos de generación, todas las modificaciones se manejaron en el código en javascript, ajustando un tamaño grande para la acropolis, mediano para el dragón y pequeño para la moto y el dinosaurio.
 
-#### Materiales y texturas 
-  Se manejaron distintos parámetros de metalness y roughness para cada uno de los modelos cargados, pues cada uno de estoss debe transmitir características muy distintas, por la naturaleza de la moto se uso un material con bastante metalness en esta. En cambio, para los materiales del dinosaurio y el dragón, se manejaron valores de roughness elevados.
+#### Iluminación
+
+Se generaron presets de día y atardecer, para estos se carga una textura en el fondo de la escena. Estos presets se pueden alternar presionando la tecla "L". Para las luces key, fill y rim, la luz rim que se implementó se mueve sobre los ejes XY, generando ligeros cambios en las sombras de los objetos.
+
+#### Materiales y texturas
+
+Se manejaron distintos parámetros de metalness y roughness para cada uno de los modelos cargados, pues cada uno de estos debe transmitir características muy distintas. Por la naturaleza de la moto se usó un material con bastante metalness en esta. En cambio, para los materiales del dinosaurio y el dragón, se manejaron valores de roughness elevados.
 
 #### Shaders procedurales
-  Se aplicaron shaders de tipo damero y de bandas en dos objetos ajenos al diseño principal del mundo 3D, un eje similar a un tablero de ajedrez con shaders damero y una agrupación de tablillas para el shader de bandas.
 
-#### Modelo de color 
-  En general, las funciones de three.js que se manejaron usan formato RGB.
+Se aplicaron shaders de tipo damero y de bandas en dos objetos ajenos al diseño principal del mundo 3D: un eje similar a un tablero de ajedrez con shaders damero y una agrupación de tablillas para el shader de bandas.
 
-#### Capturas de pantalla 
+#### Modelo de color
 
-#### GIFs animado
+En general, las funciones de three.js que se manejaron usan formato RGB.
 
---- 
+---
 
 ## Prompts Usados
 
 Se usaron bastantes prompts a lo largo del taller para aplicar funcionalidades específicas (Ejemplo: "¿Cómo introduzco un plano que pueda representar el piso en mi escena?; ¿Cómo defino cámaras ortográficas y de perspectiva en js usando three.js?"). No obstante, gran parte de la ayuda en internet provino de tutoriales de YouTube:
-- ttps://www.youtube.com/watch?v=yPA2z7fl4J8
+
+- https://www.youtube.com/watch?v=yPA2z7fl4J8
 - https://www.youtube.com/watch?v=XPhAR1YdD6o
 
 ---
@@ -162,4 +166,3 @@ En los próximos proyectos mejoraré el manejo del tiempo y crearé escenas más
 - [x] Documentación clara.
 
 ---
-
