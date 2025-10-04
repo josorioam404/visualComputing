@@ -99,22 +99,22 @@ loader.load("assets/therizinosaurus.glb", (glb) => {
 ## Capturas de pantalla 
 
 #### Perspectiva de día:
-![Perspectiva de día](threejsModels/capturas/perspectivaDia)
+![Perspectiva de día](capturas/perspectivaDia.png)
 
 #### Perspectiva de atardecer:
-![Perspectiva de atardecer](threejsModels/capturas/perspectivaAtardecer)
+![Perspectiva de atardecer](capturas/perspectivaAtardecer.png)
 
 #### Ortográfica de día:
-![Ortográfica de día](threejsModels/capturas/ortograficaDia)
+![Ortográfica de día](capturas/ortograficaDia.png)
 
 #### Ortográfica de atardecer:
-![Ortográfica de atardecer](threejsModels/capturas/ortograficaAtardecer)
+![Ortográfica de atardecer](capturas/ortograficaAtardecer.png)
 
 #### Sin shaders:
-![Sin shaders](threejsModels/capturas/sinShaders)
+![Sin shaders](capturas/sinShaders.png)
 
 #### Con shaders:
-![Con shaders](threejsModels/capturas/conShaders)
+![Con shaders](capturas/conShaders.png)
 
 ---
 
