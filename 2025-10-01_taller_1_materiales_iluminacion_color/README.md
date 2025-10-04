@@ -50,11 +50,12 @@ Lista los principales conceptos aplicados:
 │       ├── grass.jpg
 │       └── sky.jpeg
 ├── capturas/
-│   ├── perspectiva_dia.png
-│   ├── ortografica_dia.png
-│   ├── ortografica_sunset.png
-│   ├── perspectiva_sunset.png
-│   └── shaders.png
+│   ├── perspectivaDia.png
+│   ├── ortograficaDia.png
+│   ├── ortograficaAtardecer.png
+│   ├── perspectivaAtardecer.png
+│   ├── conShaders.png
+│   └── sinShaders.png
 ├── video/
 │   └── escena.mp4
 └── README.MD
@@ -76,31 +77,44 @@ Lista los principales conceptos aplicados:
 Cargue de modelos 3D de formato GLB en three.js:
 
 ```javascript
-// MODEL 1: THERIZINOSAURUS - ORGANIC 
-loader.load("assets/therizinosaurus.glb", function(glb){
+// MODEL 1: THERIZINOSAURUS - ORGANIC
+loader.load("assets/therizinosaurus.glb", (glb) => {
   models.dino = glb.scene;
   models.dino.scale.set(1, 1, 1);
   models.dino.position.set(0, -2.75, 0);
-  
-  models.dino.traverse(function(node) {
+  models.dino.traverse((node) => {
     if (node.isMesh) {
       node.castShadow = true;
       node.receiveShadow = true;
-      if (node.material) {
-        node.material.roughness = 0.7;
-        node.material.metalness = 0.1;
-      }
     }
   });
-  
   scene.add(models.dino);
-  console.log("Modelo 1: (roughness=0.7, metalness=0.1)");
-}, function(xhr){
-  console.log("Modelo 1: " + (xhr.loaded/xhr.total * 100).toFixed(2) + "% loaded");
-}, function(error){
-  console.error("Error cargando modelo 1");
+  applyShaders();
+  console.log("Modelo 1 cargado (con shader damero)");
 });
 ```
+
+---
+
+## Capturas de pantalla 
+
+#### Perspectiva de día:
+![Perspectiva de día](threejsModels/capturas/perspectivaDia)
+
+#### Perspectiva de atardecer:
+![Perspectiva de atardecer](threejsModels/capturas/perspectivaAtardecer)
+
+#### Ortográfica de día:
+![Ortográfica de día](threejsModels/capturas/ortograficaDia)
+
+#### Ortográfica de atardecer:
+![Ortográfica de atardecer](threejsModels/capturas/ortograficaAtardecer)
+
+#### Sin shaders:
+![Sin shaders](threejsModels/capturas/sinShaders)
+
+#### Con shaders:
+![Con shaders](threejsModels/capturas/conShaders)
 
 ---
 
@@ -116,15 +130,15 @@ Se usaron modelos GLB generados en meshy.ai por medio de imágenes buscadas en i
 
 #### Iluminación
 
-Se generaron presets de día y atardecer, para estos se carga una textura en el fondo de la escena. Estos presets se pueden alternar presionando la tecla "L". Para las luces key, fill y rim, la luz rim que se implementó se mueve sobre los ejes XY, generando ligeros cambios en las sombras de los objetos.
+Se generaron presets de día y atardecer, para estos se carga una textura en el fondo de la escena. Estos presets se pueden alternar presionando la tecla "L". Ahora, de manera relevante para la iluminación, la luz rim que se implementó se mueve sobre los ejes XY, generando ligeros cambios en las sombras de los objetos.
 
 #### Materiales y texturas
 
-Se manejaron distintos parámetros de metalness y roughness para cada uno de los modelos cargados, pues cada uno de estos debe transmitir características muy distintas. Por la naturaleza de la moto se usó un material con bastante metalness en esta. En cambio, para los materiales del dinosaurio y el dragón, se manejaron valores de roughness elevados.
+Se manejaron distintos parámetros de metalness y roughness para cada uno de los modelos cargados, pues cada uno de estos debe transmitir características muy distintas. Por la naturaleza de la moto se usó un material con bastante metalness en esta. En cambio, para los materiales del dinosaurio y el dragón, se manejaron valores de roughness elevados, esto para los PBR de base.
 
 #### Shaders procedurales
 
-Se aplicaron shaders de tipo damero y de bandas en dos objetos ajenos al diseño principal del mundo 3D: un eje similar a un tablero de ajedrez con shaders damero y una agrupación de tablillas para el shader de bandas.
+Se aplicaron shaders de tipo damero y de bandas en los modelos del dinosaurio y la moto respectivamente, estos pueden activarse y desactivarse con la tecla H.
 
 #### Modelo de color
 
