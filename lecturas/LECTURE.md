@@ -1,149 +1,148 @@
+
 # Parte 1: Estudio Individual del Material de Clase
+
 # Actividad
 
-## SLAM 
-Resuelve el problema de ubicación de una máquina autónoma, de manera muy reduccionista, genera un laberinto en el que es capaz de identificarse a si mismo.
+# SLAM
 
-### Tipos de enfoques de SLAM:
+## ¿Qué es SLAM?
+SLAM resuelve el problema de ubicación de una máquina autónoma. De forma reducida, consiste en generar un mapa (por ejemplo, un laberinto) y permitir que el agente pueda localizarse dentro de él.
+
+## Tipos de enfoques de SLAM
 - Visual
-- LIDAR (Laser imagin detection)
+- LIDAR (Laser Imaging Detection)
 
-### Visual Monocular:
-¿Cuál es su flujo de operación (pipeline)?
+## Visual Monocular
+
+### Flujo de operación (Pipeline)
 1. Captura de imágenes
 2. Front-End (Odometría visual)
-- Extracción de características 
-- Coincidencia de características
-- Estimación de pose
-- Triangulación
+   - Extracción de características
+   - Coincidencia de características
+   - Estimación de pose
+   - Triangulación
 3. Back-End (Optimización)
-- Mapeo local
-- Detección de cierre de bucle
-- Optimización de grafo
+   - Mapeo local
+   - Detección de cierre de bucle
+   - Optimización de grafo
 4. Salida
-- Mapa 3D del entorno
-- Trayectoria de la cámra
+   - Mapa 3D del entorno
+   - Trayectoria de la cámara
 
-Convierte un flujo de video en un mapa 3D, el front-end lo hace de por medio de estimaciones, el back-end hace optimizaciones para generar consistencia en el mapeo.
+Visual SLAM convierte un flujo de video en un mapa 3D. El front-end hace estimaciones iniciales; el back-end realiza optimizaciones para obtener un resultado consistente.
 
-### Explicación del pipeline:
-#### Front-end:
-Extracción de características:
-Para la extracción de características hace uso de algoritmos como SIFT y ORB; estos son muy distintos, SIFT es lento, muy preciso y de licencia privada, ORB es rápido, menos preciso y de licencia pública.
+### Explicación del Pipeline
 
-Coincidencia de características:
-Se usa geometría epipolar para describir la restricción geométrica entre dos vistas de una misma escena 3D.
+#### Front-End
 
-Triangulación:
-Haciendo uso de dos cámaras, se pueden proyectar rayos desde estas, tomando su intersección como la ubicacioón en el espacio 3D.
+**Extracción de características**  
+Utiliza SIFT y ORB:
+- SIFT: preciso, lento, licencia privada.
+- ORB: rápido, menos preciso, libre.
 
-### ¿Qué ventajas presenta frente a técnicas tradicionales?
-Analiza secuencias de video en tiempo real.
-Ofrece una trayectoria y Localización precisa del agente.
-Es rápido y eficiente.
+**Coincidencia de características**  
+Usa geometría epipolar para restringir la relación entre dos vistas de una misma escena 3D.
 
-### Campos de aplicación:
-- Robótica y vehículos autónomos.
-- Realidad aumentada y mixta.
-- Recosntrucción 3D y gemelos digitales.
+**Triangulación**  
+Con dos cámaras se proyectan rayos y su intersección determina la posición 3D.
 
-## SIFT
-### ¿Qué problema resuelve este algoritmo?
-Su objetivo es encontrar keypoints (puntos de interés) y asignarles una "huella dactilar" o "ADN visual" (identificador) único y robusto: el descriptor SIFT.
-Es robusto a cambios de escala, iluminación y color.
+### Ventajas frente a técnicas tradicionales
+- Procesa video en tiempo real
+- Proporciona trayectoria y localización precisas
+- Rápido y eficiente
 
+### Campos de aplicación
+- Robótica y vehículos autónomos
+- Realidad aumentada y mixta
+- Reconstrucción 3D y gemelos digitales
 
-### ¿Cuál es su flujo de operación (pipeline)?
-1. Detección de extremos en el espacio de escalas: Encontrar puntos estables.
-2. Localización precisa de keypoints: Refinar y filtrar puntos.
-3. Asignación de orientación: Lograr invariancia a la rotación.
-4. Generación del descriptor: Crear la huella digital única.
+---
 
-### Explicación del pipeline:
-#### Paso 1: Búsqueda de puntos clave en múltiples escalas
-Para que el algoritmo sea invariante de escala, se generan features constantes en varios níveles de desenfoque.
-Esta parte tiene su propio pipeline específico:
-1. Extracción de la imagen inicial.
-2. Generación de pirámide gaussiana (diferentes escalas de desenfoque en la imagen).
-3. Se calcula la diferencia entre las gaussianas (la pirámide).
-4. Se seleccionan máximos y mínimos locales para la detección de extremos 3D, estos son keypoints candidatos.
+# SIFT
 
-#### Paso 2: Refinamiento y filtrado de puntos clave
-Se filtran puntos sensibles al ruido (se eliminan aquellos que tengan bajo contraste).
-Adicional a esto, se eliminan aquellos bordes que sean ambiguos.
+## ¿Qué problema resuelve?
+Encuentra puntos clave (keypoints) y genera descriptores robustos frente a escala, iluminación y rotación.
 
-#### Paso 3: Asignación de una orientación canónica 
-Para que el algoritmo sea invariante en rotación, debe asignarle una orientación a cada keypoint identificado.
-Este parte tiene su propio pipeline específico:
-1. Se analiza la región alrededor de cada keypoint.
-2. Se calculan la magnitud y orientación de los gradientes de cada píxel en la región.
-3. Se crea un histograma de orientaciones (ponderado por la magnitud del gradiente y una ventana Gaussiana).
-4. El pico (o picos) de este histograma define la orientación principal del punto clave.
+## Pipeline
+1. Detección de extremos en el espacio de escalas
+2. Localización precisa de keypoints
+3. Asignación de orientación
+4. Generación del descriptor
 
-#### Paso 4: Creación del descriptor o huella digital visual
-Para este punto, ya se tiene una escala. ubicación y orientación estables. Es por ello que se debe generar una huella digital.
-Este parte tiene su propio pipeline específico:
-1. Se selecciona un keypoint.
-2. Se toma una vecindad de 16x16 píxeles alrededor del keypoint, esta cuadrícula tiene una orientación igual a la del keypoint.
-3. La cuadrícula del paso 2 se divide en subregiones de 4x4.
-4. Para cada subregión se crea un histograma de 8 orientaciones de gradiente.
-5. Se genera una huella digital, esta cuenta con 16 suregiones, cada una con 8 orientaciones. Es decir, 128 valores.
+## Explicación del Pipeline
 
-### ¿Qué ventajas presenta frente a técnicas tradicionales?
-Este algoritmo es usado en otros algoritmos de sistemas de percepción (SLAM por ejemplo).
-Frente a ORB presenta ventajas por su alta robustez a la escala, rotación e iluminación. En términos de calidad es muy superior.
+### Paso 1: Detección en múltiples escalas
+1. Imagen inicial  
+2. Pirámide gaussiana  
+3. Diferencia de gaussianas  
+4. Selección de máximos y mínimos locales (keypoints candidatos)
 
-### Campos de aplicación:
-- Sistemas de percepción.
-- Reconocimiento de objetos.
-- Reconstrucción 3D offline.
-- Benchmarking.
+### Paso 2: Refinamiento
+Elimina puntos con bajo contraste y bordes ambiguos.
 
-## ORB
-### ¿Qué problema resuelve este algoritmo?
-Para el algoritmo SLAM, se buscaba un algoritmo de reconocimiento de características que fuera rápido y a su vez, libre. ORB resuelve este problema.
-ORB es una síntesis de dos algoritmos rapidos y eficientes:
-- Detector: Utiliza FAST (Features from Accelerated Segment Test) para identificar keypoints a una alta velocidad.
-- Descriptor: Emplea BRIEF (Binary Robust Independent Elementary Features) para crera una huella digital o descriptor.
-ORB combina ambos enfoques y añade un paso adicional que mantiene la invariancia a la rotación.
+### Paso 3: Asignación de orientación
+1. Analiza región del keypoint  
+2. Calcula gradientes  
+3. Genera histograma de orientaciones  
+4. El pico define la orientación
 
-### ¿Cuál es su flujo de operación (pipeline)?
-1. Detección de puntos clave.
-2. Creación de huella digital.
-3. Steered brief para mantener invariancia a rotación.
+### Paso 4: Descriptor
+1. Selección del keypoint  
+2. Vecindad 16×16  
+3. División en subregiones 4×4  
+4. Histograma de 8 orientaciones por subregión  
+5. Descriptor final de 128 elementos
 
-### Explicación del pipeline:
-#### Paso 1: Encontrar puntos clave a alta velocidad con FAST
-Para la detección de esquinas (keypoints), se sigue este pipeline específico para cada píxel **p** en la imagen: 
-1. Seleccionar un círculo: Generación de un círculo de 16 píxeles de radio 3 alrededor de **p**.
-2. Comparación de intensidades: Se compara la intensidad de **p** con la de los 16 píxeles del círculo.
-3. Establecimiento de umbral: Se define un umbral de brillo **t**.
-4. Detección de esquinas: Si en el círculo existe un arcon con **N** píxeles contiguos (Normalmente se maneja N=9 o N=12) que son todos más brillantes que **p + t** o todos más oscuros que **p - t**, entonces **p** es un keypoint.
+## Ventajas
+- Muy robusto  
+- Base de otros algoritmos  
+- Superior a ORB en calidad
 
-Este paso es considerablemente rápido porque evita cálculos complejos y solo maneja comparaciones. 
+## Campos de aplicación
+- Sistemas de percepción  
+- Reconocimiento de objetos  
+- Reconstrucción 3D  
+- Benchmarking
 
-#### Paso 2: Crear una huella digital o descriptor con BRIEF 
-Para la creación de huellas digitales, se sigue este pipeline específico para cada keypoint en la imagen:
-1. Tomar un parche: Selección de un parche de píxeles alrededor del keypoint.
-2. Pares de píxeles: Dentro del parque, se selecciona un conjunto predefinido de pares de píxeles.
-3. Comparación simple: Para cada par de píxeles **(p1, p2)**, se comparan las intensidades:
-- Si intensidad(**p1**) > intensidad(**p2**), se asigna un **1**.
-- Si no, se asigna un **0**.
-4. Construcción de descriptor: El resultado es una cadena de bits que será tomada como descriptor BRIEF.
+---
 
-#### Modificación de ORB: Orientación del descripción BRIEF (Steered BRIEF)
-ORB añade una modificación para lograr invariancia de rotación. Para esto, se sigue este pipeline específico para cada keypoint en la imagen:
-1. Cálculo de orientación del keypoint: Se calcula una orientación basada en el centroide de intensidad del parche del keypoint.
-2. Rotación del patrón BRIEF: Antes de construir un descriptor, el patrón BRIEF se rota para alinearse con la orientación calculada del keypoint.
-3. Cálculo del descriptor: Se calcula el descriptor teniendo el patrón ya rotado.
+# ORB
 
-### ¿Qué ventajas presenta frente a técnicas tradicionales?
-Es extremadamente rápido, por lo que es ideal para aplicaciones de tiempo real. Adicionalmente, es de código abierto y está libre de patentes (a diferencia de SIFT).
+## ¿Qué problema resuelve?
+Proporciona un detector y descriptor rápido, eficiente y libre de patentes, ideal para SLAM.
 
-### Campos de aplicación:
-- Realidad aumentada.
-- Reconocimiento de objetos.
-- Reconstrucción 3D.
-- Composición de panorámicas.
-- Odometría visual.
+## Pipeline
+1. Detección de puntos clave (FAST)
+2. Creación del descriptor (BRIEF)
+3. Steered BRIEF (invariancia rotacional)
 
+## Explicación del Pipeline
+
+### Paso 1: FAST
+1. Círculo de 16 píxeles  
+2. Comparación de intensidades  
+3. Umbral **t**  
+4. Si existen N píxeles contiguos más brillantes u oscuros, es keypoint
+
+### Paso 2: BRIEF
+1. Parche alrededor del keypoint  
+2. Selección de pares de píxeles  
+3. Comparación de intensidades  
+4. Generación de cadena binaria (descriptor)
+
+### Steered BRIEF
+1. Cálculo de orientación del keypoint  
+2. Rotación del patrón BRIEF  
+3. Cálculo del descriptor rotado
+
+## Ventajas
+- Extremadamente rápido  
+- Libre de patentes  
+- Ideal para sistemas embebidos y móviles
+
+## Campos de aplicación
+- Realidad aumentada  
+- Reconocimiento de objetos  
+- Reconstrucción 3D  
+- Panorámicas  
+- Odometría visual
