@@ -55,6 +55,7 @@ incluye:
 ## 🎥 GIFs de la escena
 
 ``` markdown
+![Vista general](threejs/gifs/scene.gif)
 ```
 
 ------------------------------------------------------------------------
